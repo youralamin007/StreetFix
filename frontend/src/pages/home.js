@@ -4,61 +4,59 @@ import "./home.css";
 
 export default function Home() {
   return (
-    <div className="sf-page">
-      <div className="sf-hero">
-        <div className="sf-badge">StreetFix</div>
+    <div className="sf-page sf-home2">
+      <section className="sf-landing">
+        <div className="sf-landing-bg" />
 
-        <h1 className="sf-title">
-          Report street issues fast.
-          <span> Make your city better.</span>
-        </h1>
+        <div className="sf-landing-overlayCard">
+          <div className="sf-landing-badge">StreetFix</div>
 
-        <p className="sf-sub">
-          Broken roads, street lights, drainage, water logging—submit a report.
-          Track status: Pending → Solved.
-        </p>
+          <h1 className="sf-landing-title">
+            Report street issues
+            <br />
+            <span className="sf-landing-titleDim">Make your city better.</span>
+          </h1>
 
-        <div className="sf-actions">
-          <Link className="sf-cta sf-cta-primary" to="/submit">
-            📤 Submit Problem
+          <p className="sf-landing-sub">
+StreetFix is a web-based platform that allows users to report street problems with photos and location.
+ Authorities can view reports, take action, and update the status from <b>Pending</b> to <b>Solved</b> for faster resolution.
+          </p>
+
+          <div className="sf-landing-actions">
+            <Link className="sf-landing-btn primary" to="/submit">
+              Submit Problem
+            </Link>
+            <Link className="sf-landing-btn ghost" to="/problems">
+              View Problems
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="sf-home2-section">
+        <div className="sf-miniGrid">
+          <Link className="sf-miniCard" to="/submit">
+            <div className="sf-miniTitle">Submit</div>
+            <div className="sf-miniDesc">
+              Create a new report with location & details.
+            </div>
           </Link>
-          <Link className="sf-cta sf-cta-ghost" to="/problems">
-            📋 View Problems
+
+          <Link className="sf-miniCard" to="/problems">
+            <div className="sf-miniTitle">All Problems</div>
+            <div className="sf-miniDesc">
+              Browse all reports in one place.
+            </div>
+          </Link>
+
+          <Link className="sf-miniCard" to="/status">
+            <div className="sf-miniTitle">Status</div>
+            <div className="sf-miniDesc">
+              Track Pending and Solved updates.
+            </div>
           </Link>
         </div>
-      </div>
-
-      <div className="sf-cards">
-        <Link to="/submit" className="sf-card">
-          <div className="sf-icon">📤</div>
-          <div>
-            <h3>Submit Problem</h3>
-            <p>Send report with description & location.</p>
-          </div>
-        </Link>
-
-        <Link to="/problems" className="sf-card">
-          <div className="sf-icon">📋</div>
-          <div>
-            <h3>All Problems</h3>
-            <p>See all reports and filter by status.</p>
-          </div>
-        </Link>
-
-        <Link to="/problems" className="sf-card">
-          <div className="sf-icon">🔄</div>
-          <div>
-            <h3>Status</h3>
-            <p>
-              Track <b>Pending</b> and <b>Solved</b> problems.
-            </p>
-            <div className="sf-pills">
-              <span className="sf-pill sf-pending">Pending</span>
-              <span className="sf-pill sf-solved">Solved</span>
-            </div>
-          </div>
-        </Link>
-      </div>
+      </section>
     </div>
   );
 }
