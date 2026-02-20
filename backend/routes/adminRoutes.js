@@ -1,16 +1,18 @@
-const router = require("express").Router();
-const { protect, adminOnly } = require("../middleware/authMiddleware");
+const express = require("express");
+const router = express.Router();
 
-// ✅ তোমার problem/report model ফাইলের নাম অনুযায়ী এটা ঠিক করো:
-const Problem = require("../models/Problem");
+// Temporary demo login (hardcoded)
+router.post("/login", (req, res) => {
+  const { email, password } = req.body;
 
-router.get("/stats", protect, adminOnly, async (req, res) => {
-  // status value তোমার DB তে কেমন আছে সেটা অনুযায়ী বদলাতে হতে পারে
-  const total = await Problem.countDocuments();
-  const pending = await Problem.countDocuments({ status: "Pending" });
-  const solved = await Problem.countDocuments({ status: "Solved" });
+  if (email === "admin@streetfix.com" && password === "admin123") {
+    return res.status(200).json({
+      token: "demo-admin-token",
+      admin: { email },
+    });
+  }
 
-  res.json({ total, pending, solved });
+  return res.status(401).json({ message: "Invalid email or password" });
 });
 
 module.exports = router;

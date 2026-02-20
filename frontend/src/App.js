@@ -1,4 +1,11 @@
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
 import Home from "./pages/home";
@@ -11,9 +18,19 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import "./App.css";
 
+/** ✅ token থাকলেই dashboard access */
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/admin/login" replace />;
+}
+
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem("sf-theme") || "dark");
+
+  // ✅ login state token-based
+  const [isAdmin, setIsAdmin] = useState(() => !!localStorage.getItem("token"));
+
   const menuRef = useRef(null);
   const location = useLocation();
 
@@ -22,7 +39,11 @@ function Navbar() {
     localStorage.setItem("sf-theme", theme);
   }, [theme]);
 
-  useEffect(() => setOpen(false), [location.pathname]);
+  // route change => close menu + refresh login state
+  useEffect(() => {
+    setOpen(false);
+    setIsAdmin(!!localStorage.getItem("token"));
+  }, [location.pathname]);
 
   useEffect(() => {
     function onDocMouseDown(e) {
@@ -34,12 +55,20 @@ function Navbar() {
   }, [open]);
 
   useEffect(() => {
-    function onKeyDown(e) { if (e.key === "Escape") setOpen(false); }
+    function onKeyDown(e) {
+      if (e.key === "Escape") setOpen(false);
+    }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setIsAdmin(false);
+    window.location.href = "/admin/login";
+  };
 
   return (
     <nav className="sf-nav">
@@ -92,12 +121,34 @@ function Navbar() {
 
                 <div className="sf-menu-sep" />
 
-                <NavLink className="sf-menu-item" to="/admin/login" role="menuitem">
-                  Admin Login
-                </NavLink>
-                <NavLink className="sf-menu-item" to="/admin/dashboard" role="menuitem">
-                  Admin Panel
-                </NavLink>
+                {/* ✅ Login না করলে শুধু Admin Login দেখাবে */}
+                {!isAdmin ? (
+                  <NavLink className="sf-menu-item" to="/admin/login" role="menuitem">
+                    Admin Login
+                  </NavLink>
+                ) : (
+                  <>
+                    <NavLink className="sf-menu-item" to="/admin/dashboard" role="menuitem">
+                      Admin Panel
+                    </NavLink>
+
+                    <button
+                      className="sf-menu-item"
+                      type="button"
+                      onClick={logout}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        width: "100%",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        fontWeight: 800,
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -111,16 +162,16 @@ function Footer() {
   return (
     <footer className="sf-footer">
       <div className="sf-footer-inner sf-footer-3col">
-        {/* Brand */}
         <div className="sf-footer-col">
           <div className="sf-footer-title">StreetFix</div>
           <div className="sf-footer-sub">
             Report street problems • Track status • Make city better
           </div>
-          <div className="sf-footer-mini">© {new Date().getFullYear()} StreetFix | All Rights Reserved </div>
+          <div className="sf-footer-mini">
+            © {new Date().getFullYear()} StreetFix | All Rights Reserved
+          </div>
         </div>
 
-        {/* Contact: Email + Phone only */}
         <div className="sf-footer-col">
           <div className="sf-footer-heading">Contact</div>
 
@@ -147,12 +198,11 @@ function Footer() {
             </span>
             <div>
               <div className="sf-footer-label">Phone</div>
-              <div className="sf-footer-text">+880 1704629926 </div>
+              <div className="sf-footer-text">+880 1704629926</div>
             </div>
           </div>
         </div>
 
-        {/* Social: Facebook only */}
         <div className="sf-footer-col">
           <div className="sf-footer-heading">Follow</div>
 
@@ -190,7 +240,16 @@ export default function App() {
           <Route path="/problems/:id" element={<ProblemDetail />} />
 
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+          {/* ✅ Protected dashboard */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <PrivateRoute>
+                <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
 

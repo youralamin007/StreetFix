@@ -17,13 +17,19 @@ export default function AdminLogin() {
     try {
       const data = await adminLogin({ email, password });
 
-      // backend যেভাবে দেয় সেটার উপর depend করবে
-      // সাধারণত token থাকে: data.token
-      if (data?.token) localStorage.setItem("token", data.token);
+      // টোকেন সেভ করা
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+      } else {
+        // যদি আপনার ব্যাকএন্ড টোকেন না দিয়ে শুধু সাকসেস মেসেজ দেয়
+        localStorage.setItem("token", "logged_in");
+      }
 
+      // ✅ লগিন সফল হলে ড্যাশবোর্ডে পাঠানো
       navigate("/admin/dashboard");
+      window.location.reload(); // নাবার আপডেট করার জন্য
     } catch (err) {
-      setError("Login failed. Check email/password.");
+      setError("Login failed. Check email and password.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -31,38 +37,48 @@ export default function AdminLogin() {
   };
 
   return (
-    <div style={{ maxWidth: 420, margin: "40px auto" }}>
-      <h2>Admin Login</h2>
+    <div className="sf-page">
+      <div style={{ maxWidth: 420, margin: "40px auto" }}>
+        <h2>Admin Login</h2>
 
-      {error ? <p style={{ color: "red" }}>{error}</p> : null}
+        {error ? (
+          <div style={{ padding: 12, background: "rgba(239,68,68,.15)", color: "tomato", borderRadius: 10, marginBottom: 15, fontWeight: 800 }}>
+            {error}
+          </div>
+        ) : null}
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 10 }}>
-          <label>Email</label>
-          <input
-            style={{ width: "100%", padding: 8 }}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 15 }}>
+          <div>
+            <label style={{ display: "block", marginBottom: 5, fontWeight: 700 }}>Email</label>
+            <input
+              className="sf-link"
+              style={{ width: "100%", padding: 12 }}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@streetfix.com"
+              required
+            />
+          </div>
 
-        <div style={{ marginBottom: 10 }}>
-          <label>Password</label>
-          <input
-            style={{ width: "100%", padding: 8 }}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+          <div>
+            <label style={{ display: "block", marginBottom: 5, fontWeight: 700 }}>Password</label>
+            <input
+              className="sf-link"
+              style={{ width: "100%", padding: 12 }}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </div>
 
-        <button type="submit" disabled={loading} style={{ padding: "8px 14px" }}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <button className="sf-btn sf-btn-primary" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login to Admin Panel"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

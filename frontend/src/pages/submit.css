@@ -1,0 +1,91 @@
+.sf-submit-title{
+  margin: 10px 0 14px;
+  font-size: 28px;
+  font-weight: 950;
+  letter-spacing: .2px;
+}
+
+.sf-submit-card{
+  max-width: 720px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.sf-alert{
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 900;
+  border: 1px solid rgba(255,255,255,.10);
+  margin-bottom: 12px;
+}
+.sf-alert.ok{ background: rgba(34,197,94,.14); color: rgba(255,255,255,.92); }
+.sf-alert.err{ background: rgba(239,68,68,.14); color: rgba(255,255,255,.92); }
+
+.sf-submit-form{
+  display: grid;
+  gap: 14px;
+}
+
+.sf-field{
+  display: grid;
+  gap: 8px;
+}
+
+.sf-label{
+  font-weight: 900;
+  color: rgba(255,255,255,.90);
+}
+
+.sf-input, .sf-select, .sf-textarea{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  outline: none;
+}
+
+.sf-input::placeholder, .sf-textarea::placeholder{
+  color: rgba(255,255,255,.45);
+  font-weight: 700;
+}
+
+.sf-select{
+  cursor: pointer;
+}
+
+.sf-textarea{
+  min-height: 120px;
+  resize: vertical;
+}
+
+.sf-input:focus, .sf-select:focus, .sf-textarea:focus{
+  border-color: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+}
+
+.sf-submit-btn{
+  width: 160px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 950;
+  color: #07111f;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  box-shadow: 0 10px 25px rgba(37,99,235,.25);
+}
+
+.sf-submit-btn:disabled{
+  opacity: .75;
+  cursor: not-allowed;
+}
+
+@media (max-width: 780px){
+  .sf-submit-card{ padding: 14px; }
+  .sf-submit-btn{ width: 100%; }
+}
