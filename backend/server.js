@@ -5,12 +5,19 @@ require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 // middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // frontend dev
+    credentials: true,              // allow cookies
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 // MongoDB connection
 mongoose
@@ -21,6 +28,12 @@ mongoose
 // ✅ Problems API routes
 const problemsRoute = require("./routes/problems");
 app.use("/api/problems", problemsRoute);
+
+// ✅ Auth + Admin routes
+const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 // -------------------- Serve React (Production) --------------------
 app.use(express.static(path.join(__dirname, "../frontend/build")));

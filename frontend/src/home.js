@@ -1,26 +1,37 @@
-// frontend/src/pages/home.js
+import React from "react";
 import { Link } from "react-router-dom";
+import "./home.css"; // নিশ্চিত করো home.css ফাইলটা আছে
 
-function Home() {
+export default function Home() {
   return (
-    <div className="page">
-      <h1>StreetFix</h1>
-      <p>
-        রাস্তায় গর্ত, ম্যানহোল খোলা, স্ট্রিট লাইট নষ্ট, ড্রেন ব্লক – যেকোনো civic
-        problem এখানে report করুন। Authority সমস্যা দেখবে এবং সমাধান হলে status
-        <b> Solved</b> করে দেবে, নাহলে <b>Pending</b> ই থাকবে।
-      </p>
+    <div className="hero-container">
+      {/* Background Overlay */}
+      <div className="hero-overlay"></div>
 
-      <div style={{ marginTop: 20 }}>
-        <Link className="btn" to="/submit">
-          নতুন Problem Report করুন
-        </Link>
-        <Link className="btn secondary" to="/issues">
-          সব Report দেখুন
-        </Link>
+      {/* Content Box */}
+      <div className="hero-content">
+        <span className="hero-badge">STREETFIX</span>
+        
+        <h1 className="hero-title">
+          Report street issues<br />
+          Make your city better.
+        </h1>
+
+        <p className="hero-desc">
+          StreetFix is a web-based platform that allows users to report street problems 
+          with photos and location. Authorities can view reports, take action, and update 
+          the status from <b>Pending</b> to <b>Solved</b> for faster resolution.
+        </p>
+
+        <div className="hero-actions">
+          <Link to="/submit" className="btn btn-primary">
+            Submit Problem
+          </Link>
+          <Link to="/problems" className="btn btn-secondary">
+            View Problems
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
-
-export default Home;

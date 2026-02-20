@@ -1,6 +1,5 @@
-// src/pages/admin.js
 import { useEffect, useState } from "react";
-import { getProblems, updateProblemStatus } from "../api";
+import { getProblems, updateProblemStatus } from "../utils/api";
 
 const STATUS_OPTIONS = ["pending", "in_progress", "resolved"];
 
@@ -13,8 +12,9 @@ function Admin() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await getProblems();
-        setProblems(res.data);
+        const data = await getProblems();
+        const list = Array.isArray(data) ? data : data?.problems || [];
+        setProblems(list);
       } catch (err) {
         console.error(err);
         setError("Admin data load korte somossa hocche.");
@@ -28,8 +28,8 @@ function Admin() {
   async function handleStatusChange(id, status) {
     try {
       setSavingId(id);
-      const res = await updateProblemStatus(id, status);
-      const updated = res.data;
+      const updatedData = await updateProblemStatus(id, status);
+      const updated = updatedData?.problem || updatedData;
 
       setProblems((prev) =>
         prev.map((p) => (p._id === id ? { ...p, ...updated } : p))
@@ -65,7 +65,7 @@ function Admin() {
               <td>{p.status}</td>
               <td>
                 <select
-                  value={p.status}
+                  value={p.status || "pending"}
                   onChange={(e) => handleStatusChange(p._id, e.target.value)}
                   disabled={savingId === p._id}
                 >
