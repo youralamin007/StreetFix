@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProblems } from "../api";
+import { getProblems } from "../utils/api";
 
 export default function Problems() {
   const [problems, setProblems] = useState([]);
@@ -12,9 +12,12 @@ export default function Problems() {
       try {
         setLoading(true);
         setErr("");
-        const res = await getProblems();
-        setProblems(res.data || []);
+
+        // getProblems() returns the array directly
+        const data = await getProblems();
+        setProblems(Array.isArray(data) ? data : []);
       } catch (e) {
+        console.error(e);
         setErr("❌ Problems load হচ্ছে না। Backend চালু আছে কিনা চেক করুন।");
       } finally {
         setLoading(false);
@@ -29,9 +32,7 @@ export default function Problems() {
       {loading && <p>Loading...</p>}
       {err && <p>{err}</p>}
 
-      {!loading && !err && problems.length === 0 && (
-        <p>No problems found.</p>
-      )}
+      {!loading && !err && problems.length === 0 && <p>No problems found.</p>}
 
       <div style={gridStyle}>
         {problems.map((p) => (
@@ -82,7 +83,7 @@ const pill = (status) => {
     border: "1px solid rgba(255,255,255,.12)",
   };
 
-  if (s === "solved") {
+  if (s === "resolved") {
     return {
       ...common,
       color: "#34d399",
@@ -90,6 +91,7 @@ const pill = (status) => {
       background: "rgba(52,211,153,.12)",
     };
   }
+
   return {
     ...common,
     color: "#fbbf24",

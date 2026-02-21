@@ -1,54 +1,43 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const User = require("../models/User");
 
-// IMPORTANT: তোমার existing Admin model থাকলে সেটা import করো
-// যদি backend/models/Admin.js থাকে, তাহলে এই line use করো:
-// const Admin = require("../models/Admin");
-
-// যদি model না থাকে, তাহলে temporary model (admins collection) ব্যবহার হবে:
-const adminSchema = new mongoose.Schema(
-  {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-  },
-  { collection: "admins" }
-);
-const Admin = mongoose.models.Admin || mongoose.model("Admin", adminSchema);
-
-async function main() {
+async function run() {
   try {
-    if (!process.env.MONGO_URI) {
-      console.log("❌ MONGO_URI missing in .env");
-      process.exit(1);
+    if (!process.env.MONGO_URI) throw new Error("MONGO_URI missing in .env");
+
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected ✅");
+
+    // আপনার পছন্দের admin credential
+    const email = "admin@streetfix.com";
+    const password = "admin12345"; // <-- এখানে আপনার আগের password দিন
+    const name = "StreetFix Admin";
+
+    const existing = await User.findOne({ email });
+
+    if (existing) {
+      existing.name = name;
+      existing.role = "admin";
+      existing.password = password; // will be hashed by pre('save')
+      await existing.save();
+      console.log("✅ Admin existed. Updated role/password.");
+    } else {
+      await User.create({ name, email, password, role: "admin" });
+      console.log("✅ Admin created successfully.");
     }
 
-    console.log("⏳ Connecting to MongoDB...");
-    await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 30000,
-      socketTimeoutMS: 45000,
-    });
-
-    console.log("✅ DB Connected");
-
-    const email = "admin@streetfix.com";
-    const plainPassword = "admin123";
-
-    const hashed = await bcrypt.hash(plainPassword, 10);
-
-    await Admin.deleteMany({ email });
-    await Admin.create({ email, password: hashed });
-
-    console.log("✅ Admin Created Successfully!");
+    console.log("Admin Login:");
     console.log("Email:", email);
-    console.log("Password:", plainPassword);
-
-    await mongoose.disconnect();
-    process.exit(0);
+    console.log("Password:", password);
   } catch (err) {
-    console.error("❌ Error:", err);
-    process.exit(1);
+    console.error("❌ createAdmin error:", err.message);
+    process.exitCode = 1;
+  } finally {
+    await mongoose.disconnect();
   }
 }
 
-main();
+run();
