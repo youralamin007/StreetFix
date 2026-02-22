@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getProblems } from "../utils/api";
+import "./Problems.css";
 
 export default function Problems() {
   const [problems, setProblems] = useState([]);
@@ -12,90 +13,126 @@ export default function Problems() {
       try {
         setLoading(true);
         setErr("");
-
-        // getProblems() returns the array directly
-        const data = await getProblems();
+        const data = await getProblems(); // returns array
         setProblems(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error(e);
-        setErr("❌ Problems load হচ্ছে না। Backend চালু আছে কিনা চেক করুন।");
+        setErr("Problems load হচ্ছে না। Backend চালু আছে কিনা চেক করুন।");
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
+  const stats = useMemo(() => {
+    const total = problems.length;
+    const pending = problems.filter((p) =>
+      String(p.status || "pending").toLowerCase().includes("pending")
+    ).length;
+
+    const progress = problems.filter((p) =>
+      ["in_progress", "in progress"].includes(String(p.status || "").toLowerCase())
+    ).length;
+
+    const resolved = problems.filter((p) =>
+      ["resolved", "solved"].includes(String(p.status || "").toLowerCase())
+    ).length;
+
+    return { total, pending, progress, resolved };
+  }, [problems]);
+
   return (
-    <div className="sf-page">
-      <h2 style={{ marginTop: 0 }}>All Problems</h2>
+    <div className="sf-problemsPage">
+      <header className="sf-problemsHeader">
+        <div>
+          <h1 className="sf-problemsTitle">All Problems</h1>
+          <p className="sf-problemsSub">
+            Browse reports submitted by citizens and track their status.
+          </p>
+        </div>
 
-      {loading && <p>Loading...</p>}
-      {err && <p>{err}</p>}
+        <div className="sf-problemsStats">
+          <div className="sf-stat">
+            <div className="sf-statNum">{stats.total}</div>
+            <div className="sf-statLbl">Total</div>
+          </div>
+          <div className="sf-stat">
+            <div className="sf-statNum">{stats.pending}</div>
+            <div className="sf-statLbl">Pending</div>
+          </div>
+          <div className="sf-stat">
+            <div className="sf-statNum">{stats.progress}</div>
+            <div className="sf-statLbl">In Progress</div>
+          </div>
+          <div className="sf-stat">
+            <div className="sf-statNum">{stats.resolved}</div>
+            <div className="sf-statLbl">Resolved</div>
+          </div>
+        </div>
+      </header>
 
-      {!loading && !err && problems.length === 0 && <p>No problems found.</p>}
-
-      <div style={gridStyle}>
-        {problems.map((p) => (
-          <Link key={p._id} to={`/problems/${p._id}`} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <h3 style={{ margin: "0 0 6px" }}>{p.title}</h3>
-              <span style={pill(p.status)}>{p.status || "Pending"}</span>
+      {loading && (
+        <div className="sf-problemsGrid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className="sf-problemCard sf-skel" key={i}>
+              <div className="sf-skelLine w60" />
+              <div className="sf-skelLine w40" />
+              <div className="sf-skelLine w80" />
             </div>
+          ))}
+        </div>
+      )}
 
-            <p style={{ margin: 0, color: "rgba(255,255,255,.70)" }}>
-              {p.location}
-            </p>
+      {!loading && err && <div className="sf-problemsError">❌ {err}</div>}
 
-            {p.category && (
-              <p style={{ margin: "10px 0 0", opacity: 0.9 }}>
-                Category: <b>{p.category}</b>
-              </p>
-            )}
-          </Link>
-        ))}
-      </div>
+      {!loading && !err && problems.length === 0 && (
+        <div className="sf-problemsEmpty">
+          <h3>No reports found</h3>
+          <p>এখনো কোনো problem submit করা হয়নি।</p>
+        </div>
+      )}
+
+      {!loading && !err && problems.length > 0 && (
+        <div className="sf-problemsGrid">
+          {problems.map((p) => (
+            <Link key={p._id} to={`/problems/${p._id}`} className="sf-problemCard">
+              <div className="sf-problemTop">
+                <div className="sf-problemMain">
+                  <h3 className="sf-problemTitle">{p.title}</h3>
+
+                  <div className="sf-problemLoc" title={p.location}>
+                    <span className="sf-locDot" aria-hidden="true" />
+                    <span className="sf-problemLocText">{p.location}</span>
+                  </div>
+                </div>
+
+                <span className={`sf-statusPill ${pillClass(p.status)}`}>
+                  {displayStatus(p.status)}
+                </span>
+              </div>
+
+              <div className="sf-problemMeta">
+                <span className="sf-metaLabel">Category</span>
+                <span className="sf-metaValue">{p.category || "—"}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-const gridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: 14,
-};
+function displayStatus(status) {
+  const s = String(status || "pending").toLowerCase();
+  if (s === "resolved" || s === "solved") return "Resolved";
+  if (s === "in_progress" || s === "in progress") return "In Progress";
+  return "Pending";
+}
 
-const cardStyle = {
-  textDecoration: "none",
-  color: "rgba(255,255,255,.92)",
-  border: "1px solid rgba(255,255,255,.10)",
-  borderRadius: 18,
-  padding: 16,
-  background: "rgba(255,255,255,.06)",
-};
-
-const pill = (status) => {
-  const s = (status || "pending").toLowerCase();
-  const common = {
-    fontSize: 12,
-    fontWeight: 900,
-    padding: "6px 10px",
-    borderRadius: 999,
-    border: "1px solid rgba(255,255,255,.12)",
-  };
-
-  if (s === "resolved") {
-    return {
-      ...common,
-      color: "#34d399",
-      borderColor: "rgba(52,211,153,.30)",
-      background: "rgba(52,211,153,.12)",
-    };
-  }
-
-  return {
-    ...common,
-    color: "#fbbf24",
-    borderColor: "rgba(251,191,36,.30)",
-    background: "rgba(251,191,36,.12)",
-  };
-};
+function pillClass(status) {
+  const s = String(status || "pending").toLowerCase();
+  if (s === "resolved" || s === "solved") return "isResolved";
+  if (s === "in_progress" || s === "in progress") return "isProgress";
+  return "isPending";
+}

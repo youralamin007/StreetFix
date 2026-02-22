@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
 const express = require("express");
@@ -30,26 +31,40 @@ app.use(
   })
 );
 
+// MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected ✅"))
   .catch((err) => console.log("MongoDB connection error:", err.message));
 
+// Health
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, message: "StreetFix API running" });
 });
 
+// Routes
 app.use("/api/problems", require("./routes/problems"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 
+// ---------- Serve React build ----------
 const buildPath = path.resolve(__dirname, "..", "frontend", "build");
+const indexFile = path.join(buildPath, "index.html");
+
 console.log("Serving React build from:", buildPath);
+console.log("Index exists?", fs.existsSync(indexFile));
 
-app.use(express.static(buildPath));
+// serve static but don't auto-serve index (Express 5 safe)
+app.use(express.static(buildPath, { index: false }));
 
+// all non-api routes -> React index.html
 app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(buildPath, "index.html"));
+  if (!fs.existsSync(indexFile)) {
+    return res
+      .status(500)
+      .send("React build missing. Run: cd frontend && npm run build");
+  }
+  return res.sendFile("index.html", { root: buildPath });
 });
 
 const PORT = process.env.PORT || 5000;

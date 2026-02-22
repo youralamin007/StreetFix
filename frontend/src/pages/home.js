@@ -1,154 +1,120 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "./home.css";
 
-export default function Home() {
-  const slides = useMemo(
-    () => [
-      {
-        badge: "BROKEN ROAD",
-        title: ["Report broken roads", "Help fix potholes faster."],
-        desc:
-          "Report damaged roads and potholes with location details. Authorities can review and resolve faster with clear updates.",
-        primary: { label: "Submit Problem", to: "/submit" },
-        secondary: { label: "View Problems", to: "/problems" },
-        image:
-          "https://images.unsplash.com/photo-1501837308775-1a0e1b60b07a?auto=format&fit=crop&w=2400&q=80",
-      },
-      {
-        badge: "DRAIN PROBLEM",
-        title: ["Drain issues?", "Report blocked drainage."],
-        desc:
-          "Blocked drains cause water accumulation and poor hygiene. Submit a report so action can be taken quickly.",
-        primary: { label: "Submit Now", to: "/submit" },
-        secondary: { label: "Check Status", to: "/status" },
-        image:
-          "https://images.unsplash.com/photo-1527766833261-b09c3163a791?auto=format&fit=crop&w=2400&q=80",
-      },
-      {
-        badge: "STREET LIGHT",
-        title: ["Street light not working?", "Make roads safer at night."],
-        desc:
-          "Report faulty street lights with exact location. Better lighting improves safety for everyone.",
-        primary: { label: "Report Light Issue", to: "/submit" },
-        secondary: { label: "All Problems", to: "/problems" },
-        image:
-          "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2400&q=80",
-      },
-      {
-        badge: "WATER LOGGING",
-        title: ["Water logging after rain?", "Report and track progress."],
-        desc:
-          "Water logging blocks movement and damages roads. Report affected areas so authorities can act.",
-        primary: { label: "Submit Water Log", to: "/submit" },
-        secondary: { label: "Solved List", to: "/solved" },
-        image:
-          "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=2400&q=80",
-      },
-      {
-        badge: "GARBAGE",
-        title: ["Garbage in your area?", "Keep the city clean."],
-        desc:
-          "Report garbage dumping spots. Clean environments improve health and reduce pollution.",
-        primary: { label: "Report Garbage", to: "/submit" },
-        secondary: { label: "Browse Reports", to: "/problems" },
-        image:
-          "https://images.unsplash.com/photo-1528323273322-d81458248d40?auto=format&fit=crop&w=2400&q=80",
-      },
-    ],
-    []
-  );
-
-  const DURATION = 5200;
-  const [active, setActive] = useState(0);
-  const timerRef = useRef(null);
-
-  const startAuto = () => {
-    stopAuto();
-    timerRef.current = setInterval(() => {
-      setActive((p) => (p + 1) % slides.length);
-    }, DURATION);
-  };
-
-  const stopAuto = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-  };
-
-  useEffect(() => {
-    startAuto();
-    return () => stopAuto();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slides.length]);
-
-  const go = (idx) => setActive(idx);
-  const prev = () => setActive((p) => (p - 1 + slides.length) % slides.length);
-  const next = () => setActive((p) => (p + 1) % slides.length);
-
-  const s = slides[active];
-
+function RoadMapArt({ className = "" }) {
   return (
-    <section
-      className="sf-homeHero"
-      onMouseEnter={stopAuto}
-      onMouseLeave={startAuto}
-      style={{ "--hero-bg": `url("${s.image}")` }}
+    <svg
+      className={className}
+      viewBox="0 0 420 340"
+      role="img"
+      aria-label="Road map illustration"
     >
-      <div className="sf-homeHero__bg" key={s.image} />
-      <div className="sf-homeHero__overlay" />
+      <defs>
+        <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#f3f3f3" />
+          <stop offset="1" stopColor="#ffffff" />
+        </linearGradient>
 
-      <div className="sf-homeHero__wrap">
-        <div className="sf-homeHero__card">
-          <div className="sf-homeHero__top">
-            <span className="sf-homeHero__badge">{s.badge}</span>
+        <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="16" stdDeviation="14" floodColor="#000" floodOpacity=".18" />
+        </filter>
 
-            <div className="sf-homeHero__nav">
-              <button className="sf-heroBtn" onClick={prev} aria-label="Previous slide">
-                ‹
-              </button>
-              <button className="sf-heroBtn" onClick={next} aria-label="Next slide">
-                ›
-              </button>
-            </div>
-          </div>
+        <filter id="pinShadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="10" stdDeviation="8" floodColor="#000" floodOpacity=".22" />
+        </filter>
 
-          <h1 className="sf-homeHero__title">
-            {s.title[0]}
-            <br />
-            <span>{s.title[1]}</span>
+        {/* pin shape */}
+        <symbol id="pin" viewBox="0 0 64 64">
+          <path d="M32 60s18-16 18-32A18 18 0 1 0 14 28c0 16 18 32 18 32Z" />
+          <circle cx="32" cy="28" r="10" fill="#fff" opacity=".95" />
+        </symbol>
+      </defs>
+
+      {/* card bg */}
+      <rect x="18" y="12" width="384" height="300" rx="26" fill="url(#bgG)" filter="url(#softShadow)" />
+
+      {/* road (dark) */}
+      <path
+        d="M120 300
+           C 150 250, 140 210, 170 170
+           C 210 120, 300 125, 310 70
+           C 316 38, 280 28, 250 30"
+        fill="none"
+        stroke="#1f2327"
+        strokeWidth="92"
+        strokeLinecap="round"
+      />
+
+      {/* road edge lines */}
+      <path
+        d="M120 300
+           C 150 250, 140 210, 170 170
+           C 210 120, 300 125, 310 70
+           C 316 38, 280 28, 250 30"
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth="10"
+        strokeLinecap="round"
+        opacity=".9"
+      />
+
+      {/* center dashed line */}
+      <path
+        d="M120 300
+           C 150 250, 140 210, 170 170
+           C 210 120, 300 125, 310 70
+           C 316 38, 280 28, 250 30"
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeDasharray="14 18"
+        opacity=".9"
+      />
+
+      {/* pins */}
+      <g filter="url(#pinShadow)">
+        <use href="#pin" x="70" y="225" width="62" height="62" fill="#6D28D9" />
+        <use href="#pin" x="195" y="160" width="62" height="62" fill="#22C55E" />
+        <use href="#pin" x="255" y="96" width="62" height="62" fill="#F97316" />
+        <use href="#pin" x="305" y="52" width="58" height="58" fill="#9CA3AF" />
+      </g>
+    </svg>
+  );
+}
+
+export default function Home() {
+  return (
+    <section className="sf-heroSplit">
+      <div className="sf-heroInner">
+        {/* LEFT */}
+        <div className="sf-heroLeft">
+          <h1 className="sf-heroTitle">
+            Easy way to <br />
+            report street issues
           </h1>
 
-          <p className="sf-homeHero__desc">{s.desc}</p>
+          <p className="sf-heroDesc">
+            Report broken roads, street lights, drainage and garbage problems with
+            location details. Track status updates and help improve your city.
+          </p>
 
-          <div className="sf-homeHero__actions">
-            <Link className="sf-cta sf-cta--primary" to={s.primary.to}>
-              {s.primary.label}
+          <div className="sf-heroActions">
+            <Link className="sf-heroBtnPrimary" to="/submit">
+              Submit Problem
             </Link>
-            <Link className="sf-cta sf-cta--ghost" to={s.secondary.to}>
-              {s.secondary.label}
+            <Link className="sf-heroBtnGhost" to="/problems">
+              View All Problems
             </Link>
           </div>
+        </div>
 
-          <div className="sf-homeHero__dots">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                className={`sf-dot ${i === active ? "active" : ""}`}
-                onClick={() => go(i)}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-
-          <div className="sf-progress">
-            <div
-              key={active}
-              className="sf-progress__bar"
-              style={{ animationDuration: `${DURATION}ms` }}
-            />
-          </div>
-
-          <div className="sf-miniNote">
-            Hover to pause • Click dots to navigate • Background changes per slide
+        {/* RIGHT */}
+        <div className="sf-heroRight" aria-hidden="true">
+          <div className="sf-heroArt">
+            {/* ✅ this is the “road + pins” image */}
+            <RoadMapArt className="sf-roadImg" />
           </div>
         </div>
       </div>

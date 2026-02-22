@@ -1,29 +1,48 @@
-.sf-submit-title{
-  margin: 10px 0 14px;
-  font-size: 28px;
-  font-weight: 950;
-  letter-spacing: .2px;
-}
+/* Submit page - premium light theme readable */
 
-.sf-submit-card{
-  max-width: 720px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.06);
-  backdrop-filter: blur(10px);
-  border-radius: 18px;
+.sf-page{
+  max-width: 1100px;
+  margin: 0 auto;
   padding: 18px;
 }
 
-.sf-alert{
-  padding: 12px 14px;
-  border-radius: 14px;
-  font-weight: 900;
-  border: 1px solid rgba(255,255,255,.10);
-  margin-bottom: 12px;
+.sf-submit-title{
+  margin: 0 0 14px;
+  font-size: 42px;
+  font-weight: 950;
+  letter-spacing: .2px;
+  color: #1C1C1C;
 }
-.sf-alert.ok{ background: rgba(34,197,94,.14); color: rgba(255,255,255,.92); }
-.sf-alert.err{ background: rgba(239,68,68,.14); color: rgba(255,255,255,.92); }
 
+.sf-submit-card{
+  background: #F8F7F4;
+  border: 1px solid rgba(28,28,28,.12);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 22px 60px rgba(0,0,0,.10);
+}
+
+/* Alerts */
+.sf-alert{
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.sf-alert.ok{
+  background: rgba(34,197,94,.14);
+  border: 1px solid rgba(34,197,94,.28);
+  color: #14532d;
+}
+
+.sf-alert.err{
+  background: rgba(239,68,68,.12);
+  border: 1px solid rgba(239,68,68,.28);
+  color: #7f1d1d;
+}
+
+/* Form layout */
 .sf-submit-form{
   display: grid;
   gap: 14px;
@@ -35,57 +54,65 @@
 }
 
 .sf-label{
+  font-size: 15px;
   font-weight: 900;
-  color: rgba(255,255,255,.90);
+  color: #1C1C1C;
 }
 
-.sf-input, .sf-select, .sf-textarea{
+/* Inputs */
+.sf-input,
+.sf-select,
+.sf-textarea{
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.92);
+  border-radius: 16px;
+  border: 1px solid rgba(28,28,28,.14);
+  background: #FFFFFF;
+  color: #1C1C1C;
+  padding: 14px 14px;
   outline: none;
-}
-
-.sf-input::placeholder, .sf-textarea::placeholder{
-  color: rgba(255,255,255,.45);
-  font-weight: 700;
-}
-
-.sf-select{
-  cursor: pointer;
+  font-size: 15px;
 }
 
 .sf-textarea{
-  min-height: 120px;
+  min-height: 110px;
   resize: vertical;
 }
 
-.sf-input:focus, .sf-select:focus, .sf-textarea:focus{
-  border-color: rgba(255,255,255,.22);
-  background: rgba(255,255,255,.08);
+.sf-input::placeholder,
+.sf-textarea::placeholder{
+  color: rgba(28,28,28,.45);
+  font-weight: 700;
 }
 
+/* Focus ring (gold) */
+.sf-input:focus,
+.sf-select:focus,
+.sf-textarea:focus{
+  border-color: rgba(193,155,70,.55);
+  box-shadow: 0 0 0 4px rgba(212,175,55,.22);
+}
+
+/* Button */
 .sf-submit-btn{
-  width: 160px;
-  padding: 12px 16px;
-  border-radius: 14px;
-  border: none;
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 16px;
+  padding: 14px 16px;
   cursor: pointer;
   font-weight: 950;
-  color: #07111f;
-  background: linear-gradient(90deg, #2563eb, #06b6d4);
-  box-shadow: 0 10px 25px rgba(37,99,235,.25);
+  font-size: 15px;
+  color: #1C1C1C;
+  background: linear-gradient(180deg, #E2C25A 0%, #D4AF37 55%, #CDA634 100%);
+  box-shadow: 0 16px 34px rgba(193,155,70,.22);
+  transition: .15s ease;
+}
+
+.sf-submit-btn:hover{
+  background: linear-gradient(180deg, #C79F35 0%, #B8922E 100%);
+  transform: translateY(-1px);
 }
 
 .sf-submit-btn:disabled{
-  opacity: .75;
+  opacity: .65;
   cursor: not-allowed;
-}
-
-@media (max-width: 780px){
-  .sf-submit-card{ padding: 14px; }
-  .sf-submit-btn{ width: 100%; }
+  transform: none;
 }
