@@ -1,87 +1,132 @@
-import { useEffect, useState } from "react";
-import { getProblems, updateProblemStatus } from "../utils/api";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { adminLogin } from "../utils/api";
+import "./AdminLogin.css";
 
-const STATUS_OPTIONS = ["pending", "in_progress", "resolved"];
+export default function AdminLogin() {
+  const navigate = useNavigate();
 
-function Admin() {
-  const [problems, setProblems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [savingId, setSavingId] = useState(null);
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    email: "admin@streetfix.com",
+    password: "",
+  });
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getProblems();
-        const list = Array.isArray(data) ? data : data?.problems || [];
-        setProblems(list);
-      } catch (err) {
-        console.error(err);
-        setError("Admin data load korte somossa hocche.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState({ type: "", text: "" });
 
-  async function handleStatusChange(id, status) {
+  const onChange = (e) => {
+    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setMsg({ type: "", text: "" });
+
     try {
-      setSavingId(id);
-      const updatedData = await updateProblemStatus(id, status);
-      const updated = updatedData?.problem || updatedData;
+      setLoading(true);
 
-      setProblems((prev) =>
-        prev.map((p) => (p._id === id ? { ...p, ...updated } : p))
-      );
+      const res = await adminLogin(form.email.trim(), form.password);
+
+      // backend returns { token, admin: {...} }
+      if (!res?.token) throw new Error("Token not found in response");
+
+      localStorage.setItem("token", res.token);
+
+      setMsg({ type: "success", text: "Login successful. Redirecting..." });
+      setTimeout(() => navigate("/admin/dashboard"), 400);
     } catch (err) {
+      const text =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Login failed. Check email and password.";
+      setMsg({ type: "error", text });
       console.error(err);
-      alert("Status update hoy ni.");
     } finally {
-      setSavingId(null);
+      setLoading(false);
     }
-  }
-
-  if (loading) return <div className="page">Loading...</div>;
-  if (error) return <div className="page error">{error}</div>;
+  };
 
   return (
-    <div className="page">
-      <h2>Admin Panel</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Location</th>
-            <th>Current Status</th>
-            <th>Change Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {problems.map((p) => (
-            <tr key={p._id}>
-              <td>{p.title}</td>
-              <td>{p.location}</td>
-              <td>{p.status}</td>
-              <td>
-                <select
-                  value={p.status || "pending"}
-                  onChange={(e) => handleStatusChange(p._id, e.target.value)}
-                  disabled={savingId === p._id}
+    <div className="sf-adminLoginPage">
+      <div className="sf-adminLoginShell">
+        <div className="sf-adminLoginCard">
+          <div className="sf-adminLoginHeader">
+            <div className="sf-adminLoginTitlePill">
+              <span className="sf-adminLock" aria-hidden="true">🔒</span>
+              <h1 className="sf-adminLoginTitle">Admin Login</h1>
+            </div>
+            <p className="sf-adminLoginSub">
+              Login to access the admin dashboard and manage reports.
+            </p>
+          </div>
+
+          <div className="sf-adminArt" aria-hidden="true">
+            <div className="sf-adminArtRoad" />
+            <div className="sf-adminArtCone" />
+            <div className="sf-adminArtHole" />
+          </div>
+
+          {msg.text ? (
+            <div className={`sf-adminAlert ${msg.type === "success" ? "ok" : "err"}`}>
+              {msg.text}
+            </div>
+          ) : null}
+
+          <form className="sf-adminForm" onSubmit={onSubmit}>
+            <div className="sf-adminField">
+              <label className="sf-adminLabel">Email</label>
+              <div className="sf-adminInputWrap">
+                <span className="sf-adminIcon" aria-hidden="true">✉</span>
+                <input
+                  className="sf-adminInput"
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={onChange}
+                  placeholder="admin@streetfix.com"
+                  autoComplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="sf-adminField">
+              <label className="sf-adminLabel">Password</label>
+              <div className="sf-adminInputWrap">
+                <span className="sf-adminIcon" aria-hidden="true">•</span>
+                <input
+                  className="sf-adminInput"
+                  name="password"
+                  type={showPass ? "text" : "password"}
+                  value={form.password}
+                  onChange={onChange}
+                  placeholder="Enter password"
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="sf-adminEye"
+                  onClick={() => setShowPass((v) => !v)}
+                  aria-label={showPass ? "Hide password" : "Show password"}
+                  title={showPass ? "Hide password" : "Show password"}
                 >
-                  {STATUS_OPTIONS.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  {showPass ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+
+            <button className="sf-adminBtn" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login to Admin Panel"}
+            </button>
+
+            <div className="sf-adminHint">
+              Default: <b>admin@streetfix.com</b> / <b>admin12345</b>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default Admin;

@@ -1,27 +1,40 @@
+/* Full-width landing (break out of centered container) */
 .sf-heroSplit{
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
+
+  /* cancel .sf-app padding (if you have it) */
   margin-top: -22px;
   margin-bottom: -40px;
 
   min-height: calc(100vh - 78px);
-  background: #EEF0F2;
   overflow: hidden;
+
+  background:
+    radial-gradient(900px 650px at 18% 10%, rgba(0,0,0,.05), transparent 60%),
+    linear-gradient(180deg, #F2F4F6 0%, #EEF0F2 100%);
 }
 
+/* Inner container */
 .sf-heroInner{
   position: relative;
   min-height: inherit;
+
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-  align-items: center;
+
+  /* ✅ left content up (not vertically centered) */
+  align-items: start;
+
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 8px;
+
+  /* ✅ little top padding to look clean */
+  padding: 20px 10px 0;
 }
 
-/* right green panel diagonal */
+/* Right green panel with diagonal edge */
 .sf-heroSplit::before{
   content:"";
   position:absolute;
@@ -33,69 +46,86 @@
   clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
 }
 
+/* subtle green glow */
+.sf-heroSplit::after{
+  content:"";
+  position:absolute;
+  right: -140px;
+  top: -180px;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,255,255,.18), transparent 60%);
+  pointer-events: none;
+}
+
 /* LEFT */
 .sf-heroLeft{
   position: relative;
   z-index: 2;
-  padding: 56px 18px 56px 22px;
+
+  /* ✅ moved upward */
+  padding: 34px 18px 56px 22px;
 }
 
 .sf-heroTitle{
-  margin: 0 0 12px;
-  font-size: clamp(34px, 4.4vw, 56px);
+  margin: 0 0 14px;
+  font-size: clamp(36px, 4.6vw, 64px);
   line-height: 1.02;
   font-weight: 950;
   color: #1C1C1C;
+  letter-spacing: -0.6px;
 }
 
 .sf-heroDesc{
-  margin: 0 0 18px;
-  max-width: 540px;
-  color: #6B6B6B;
-  font-weight: 700;
-  line-height: 1.7;
-  font-size: 14.5px;
+  margin: 0 0 22px;
+  max-width: 560px;
+  color: #5F6368;
+  font-weight: 750;
+  line-height: 1.75;
+  font-size: 15px;
 }
 
 .sf-heroActions{
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .sf-heroBtnPrimary{
   text-decoration: none;
   border: none;
   border-radius: 999px;
-  padding: 12px 18px;
+  padding: 13px 20px;
   font-weight: 950;
   cursor: pointer;
-  color: #1C1C1C;
+  color: #101214;
   background: #CFE46A;
-  box-shadow: 0 16px 30px rgba(0,0,0,.10);
-  transition: .15s ease;
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+  transition: .16s ease;
 }
 
 .sf-heroBtnPrimary:hover{
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   background: #BFE05A;
+  box-shadow: 0 26px 60px rgba(0,0,0,.16);
 }
 
 .sf-heroBtnGhost{
   text-decoration: none;
   border-radius: 999px;
-  padding: 12px 18px;
+  padding: 13px 20px;
   font-weight: 950;
-  color: #1C1C1C;
-  background: rgba(248,247,244,.85);
+  color: #101214;
+  background: rgba(255,255,255,.55);
   border: 1px solid rgba(28,28,28,.14);
-  transition: .15s ease;
+  transition: .16s ease;
 }
 
 .sf-heroBtnGhost:hover{
-  transform: translateY(-1px);
-  background: rgba(248,247,244,1);
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.78);
   border-color: rgba(28,28,28,.22);
 }
 
@@ -107,29 +137,103 @@
   display: grid;
   align-items: center;
   justify-items: center;
-  padding: 30px 18px;
+  padding: 26px 18px;
+
+  /* ✅ keep right panel centered like before */
+  align-self: center;
 }
 
-.sf-heroArt{
-  position: relative;
-  width: min(560px, 100%);
-  aspect-ratio: 16/10;
+/* Panel that holds 4 tiles */
+.sf-heroPanel{
+  width: min(680px, 100%);
+  padding: 14px;
+  border-radius: 34px;
+
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 34px 90px rgba(0,0,0,.22),
+    0 12px 28px rgba(0,0,0,.12);
+
+  backdrop-filter: blur(10px);
 }
 
-/* works for SVG now */
-.sf-roadImg{
-  position: absolute;
-  inset: 0;
+/* 2x2 grid */
+.sf-heroGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sf-tile{
+  background: rgba(255,255,255,.82);
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 22px;
+  overflow: hidden;
+
+  box-shadow: 0 18px 55px rgba(0,0,0,.14);
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+
+.sf-tile:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 26px 75px rgba(0,0,0,.18);
+}
+
+.sf-tileMedia{
+  padding: 16px 16px 8px;
+  display: grid;
+  place-items: center;
+}
+
+.sf-ill{
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 165px;
   display: block;
 }
 
-/* responsive */
+.sf-tileLabel{
+  padding: 10px 14px 14px;
+  text-align: center;
+  font-weight: 950;
+  color: rgba(28,28,28,.70);
+  font-size: 12px;
+  letter-spacing: .4px;
+}
+
+/* Responsive */
 @media (max-width: 980px){
-  .sf-heroInner{ grid-template-columns: 1fr; }
-  .sf-heroSplit::before{ width: 100%; clip-path: none; }
-  .sf-heroLeft{ padding: 42px 18px 16px; }
-  .sf-heroRight{ padding: 16px 18px 40px; }
-  .sf-heroSplit{ min-height: auto; }
+  .sf-heroInner{
+    grid-template-columns: 1fr;
+    padding: 0 10px;
+  }
+
+  .sf-heroSplit::before{
+    width: 100%;
+    clip-path: none;
+  }
+
+  .sf-heroLeft{
+    padding: 34px 18px 14px; /* still upper on mobile */
+  }
+
+  .sf-heroRight{
+    padding: 14px 18px 38px;
+    align-self: auto;
+  }
+
+  .sf-heroSplit{
+    min-height: auto;
+  }
+}
+
+@media (max-width: 520px){
+  .sf-heroGrid{
+    grid-template-columns: 1fr;
+  }
+  .sf-heroPanel{
+    padding: 12px;
+    border-radius: 26px;
+  }
 }

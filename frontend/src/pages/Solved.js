@@ -1,83 +1,135 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProblems } from "../api";
+import { getProblems } from "../utils/api";
+import "./Solved.css";
+
+function normStatus(s) {
+  const v = String(s || "").toLowerCase();
+  if (v === "resolved" || v === "solved") return "resolved";
+  if (v === "in_progress" || v === "in progress") return "in_progress";
+  if (v.includes("pending") || !v) return "pending";
+  return v;
+}
 
 export default function Solved() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [sort, setSort] = useState("newest"); // newest | oldest
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        const res = await getProblems();
-        setItems(res.data || []);
+        setErr("");
+        const data = await getProblems(); // returns array
+        const solvedOnly = (Array.isArray(data) ? data : []).filter(
+          (p) => normStatus(p.status) === "resolved"
+        );
+        setItems(solvedOnly);
       } catch (e) {
-        setErr("Solved problems load হচ্ছে না।");
+        console.error(e);
+        setErr("Failed to load solved reports. Please check if the backend is running.");
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  const solved = useMemo(() => {
-    return (items || []).filter((x) => (x.status || "").toLowerCase() === "solved");
-  }, [items]);
+  const sorted = useMemo(() => {
+    return [...items].sort((a, b) => {
+      const da = new Date(a.createdAt || 0).getTime() || 0;
+      const db = new Date(b.createdAt || 0).getTime() || 0;
+      return sort === "newest" ? db - da : da - db;
+    });
+  }, [items, sort]);
 
   return (
-    <div className="sf-page">
-      <h2 style={{ marginTop: 0 }}>Solved</h2>
-      <p style={{ color: "rgba(255,255,255,.70)", marginTop: 6 }}>
-        এখানে শুধু solved হয়ে যাওয়া reports দেখাবে।
-      </p>
+    <div className="sf-solvedPage">
+      <header className="sf-solvedHero">
+        <div className="sf-solvedHeroTop">
+          <div>
+            <h1 className="sf-solvedTitle">Solved Reports</h1>
+            <p className="sf-solvedSub">
+              Only resolved/solved reports are shown here.
+            </p>
+          </div>
 
-      {loading && <p style={{ marginTop: 16 }}>Loading...</p>}
-      {err && <p style={{ marginTop: 16 }}>{err}</p>}
+          <div className="sf-solvedBadge" title="Resolved count">
+            <div className="sf-solvedBadgeNum">{items.length}</div>
+            <div className="sf-solvedBadgeLbl">Resolved</div>
+          </div>
+        </div>
 
-      {!loading && !err && solved.length === 0 && (
-        <p style={{ marginTop: 16 }}>No solved reports yet.</p>
+        {/* ✅ Search removed, only sort remains */}
+        <div className="sf-solvedToolbar sf-solvedToolbarOne">
+          <select
+            className="sf-solvedSort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </div>
+      </header>
+
+      {loading && (
+        <div className="sf-solvedGrid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className="sf-solvedCard sf-skel" key={i}>
+              <div className="sf-skelLine w60" />
+              <div className="sf-skelLine w40" />
+              <div className="sf-skelLine w80" />
+            </div>
+          ))}
+        </div>
       )}
 
-      <div style={gridStyle}>
-        {solved.map((p) => (
-          <Link key={p._id} to={`/problems/${p._id}`} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-              <h3 style={{ margin: 0 }}>{p.title}</h3>
-              <span style={pillSolved}>Solved</span>
-            </div>
-            <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,.70)" }}>
-              {p.location}
-            </p>
+      {!loading && err && <div className="sf-solvedError">❌ {err}</div>}
+
+      {!loading && !err && sorted.length === 0 && (
+        <div className="sf-solvedEmpty">
+          <div className="sf-emptyIcon" aria-hidden="true">✓</div>
+          <h3>No solved reports yet</h3>
+          <p>There are no resolved reports at the moment.</p>
+          <Link className="sf-emptyBtn" to="/problems">
+            Browse All Problems
           </Link>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {!loading && !err && sorted.length > 0 && (
+        <div className="sf-solvedGrid">
+          {sorted.map((p) => (
+            <Link key={p._id} to={`/problems/${p._id}`} className="sf-solvedCard">
+              <div className="sf-cardTop">
+                <h3 className="sf-cardTitle">{p.title}</h3>
+                <span className="sf-pill">Resolved</span>
+              </div>
+
+              <div className="sf-cardLoc" title={p.location}>
+                <span className="sf-locDot" aria-hidden="true" />
+                <span className="sf-locText">{p.location}</span>
+              </div>
+
+              <div className="sf-cardMeta">
+                <div className="sf-metaCol">
+                  <div className="sf-metaLabel">Category</div>
+                  <div className="sf-metaValue">{p.category || "—"}</div>
+                </div>
+
+                <div className="sf-metaCol right">
+                  <div className="sf-metaLabel">Date</div>
+                  <div className="sf-metaValue">
+                    {p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "—"}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-
-const gridStyle = {
-  marginTop: 16,
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: 14,
-};
-
-const cardStyle = {
-  textDecoration: "none",
-  color: "rgba(255,255,255,.92)",
-  border: "1px solid rgba(255,255,255,.10)",
-  borderRadius: 18,
-  padding: 16,
-  background: "rgba(255,255,255,.06)",
-};
-
-const pillSolved = {
-  fontSize: 12,
-  fontWeight: 900,
-  padding: "6px 10px",
-  borderRadius: 999,
-  border: "1px solid rgba(52,211,153,.30)",
-  color: "#34d399",
-  background: "rgba(52,211,153,.12)",
-};

@@ -1,0 +1,268 @@
+:root{
+  --bg: #E5E3DE;
+  --surface: #F8F7F4;
+  --text: #1C1C1C;
+  --muted: #6B6B6B;
+  --border: rgba(28,28,28,.12);
+  --shadow: 0 24px 70px rgba(0,0,0,.12);
+
+  --gold: #D4AF37;
+  --gold2: #C19B46;
+  --goldHover: #B8922E;
+}
+
+.sf-adminLoginPage{
+  min-height: calc(100vh - 78px);
+  padding: 22px 14px;
+
+  background:
+    radial-gradient(900px 520px at 20% 10%, rgba(212,175,55,.20), transparent 60%),
+    radial-gradient(900px 520px at 85% 10%, rgba(193,155,70,.14), transparent 60%),
+    linear-gradient(180deg, #EEE9E0 0%, var(--bg) 60%, #DED9D0 100%);
+}
+
+.sf-adminLoginShell{
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+}
+
+.sf-adminLoginCard{
+  width: min(520px, 100%);
+  background: rgba(248,247,244,.92);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+  backdrop-filter: blur(10px);
+}
+
+.sf-adminLoginHeader{
+  margin-bottom: 10px;
+}
+
+.sf-adminLoginTitlePill{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 16px 16px;
+  border-radius: 18px;
+  background: rgba(212,175,55,.18);
+  border: 1px solid rgba(212,175,55,.28);
+}
+
+.sf-adminLock{
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.sf-adminLoginTitle{
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.05;
+  font-weight: 950;
+  color: var(--text);
+}
+
+.sf-adminLoginSub{
+  margin: 10px 2px 0;
+  color: var(--muted);
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+/* simple professional illustration */
+.sf-adminArt{
+  position: relative;
+  height: 130px;
+  margin: 12px 0 10px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.20));
+  border: 1px solid rgba(0,0,0,.08);
+  overflow: hidden;
+}
+
+.sf-adminArtRoad{
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 46px;
+  height: 52px;
+  border-radius: 18px;
+  background: rgba(15,23,42,.90);
+  box-shadow: 0 18px 40px rgba(0,0,0,.18) inset;
+}
+
+.sf-adminArtRoad::before{
+  content:"";
+  position:absolute;
+  left: 16px;
+  right: 16px;
+  top: 12px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  opacity: .85;
+}
+
+.sf-adminArtRoad::after{
+  content:"";
+  position:absolute;
+  left: 16px;
+  right: 16px;
+  top: 26px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  opacity: .55;
+}
+
+.sf-adminArtHole{
+  position:absolute;
+  left: 46%;
+  top: 56px;
+  width: 90px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.55);
+  filter: blur(.2px);
+}
+
+.sf-adminArtCone{
+  position:absolute;
+  right: 18%;
+  top: 78px;
+  width: 22px;
+  height: 38px;
+  border-radius: 6px;
+  background: #F59E0B;
+  box-shadow: 0 10px 20px rgba(0,0,0,.18);
+}
+
+.sf-adminAlert{
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 900;
+  margin: 10px 0 12px;
+  border: 1px solid var(--border);
+}
+
+.sf-adminAlert.ok{
+  background: rgba(34,197,94,.14);
+  border-color: rgba(34,197,94,.28);
+  color: #14532d;
+}
+
+.sf-adminAlert.err{
+  background: rgba(239,68,68,.12);
+  border-color: rgba(239,68,68,.28);
+  color: #7f1d1d;
+}
+
+.sf-adminForm{
+  display: grid;
+  gap: 12px;
+}
+
+.sf-adminField{
+  display: grid;
+  gap: 8px;
+}
+
+.sf-adminLabel{
+  font-weight: 950;
+  color: var(--text);
+}
+
+.sf-adminInputWrap{
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(28,28,28,.14);
+}
+
+.sf-adminInputWrap:focus-within{
+  border-color: rgba(212,175,55,.45);
+  box-shadow: 0 0 0 4px rgba(212,175,55,.18);
+}
+
+.sf-adminIcon{
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(212,175,55,.18);
+  border: 1px solid rgba(212,175,55,.22);
+  font-weight: 950;
+}
+
+.sf-adminInput{
+  border: none;
+  outline: none;
+  background: transparent;
+  font-weight: 850;
+  color: var(--text);
+  font-size: 15px;
+  padding: 8px 6px;
+  width: 100%;
+}
+
+.sf-adminEye{
+  border: 1px solid rgba(28,28,28,.12);
+  background: rgba(248,247,244,.85);
+  color: var(--text);
+  font-weight: 950;
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.sf-adminEye:hover{
+  background: rgba(212,175,55,.16);
+  border-color: rgba(212,175,55,.28);
+}
+
+.sf-adminBtn{
+  margin-top: 4px;
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 18px;
+  padding: 13px 14px;
+  cursor: pointer;
+  font-weight: 950;
+  font-size: 15px;
+  color: var(--text);
+  background: linear-gradient(180deg, #E2C25A 0%, var(--gold) 65%, #CDA634 100%);
+  box-shadow: 0 18px 35px rgba(193,155,70,.18);
+  transition: .15s ease;
+}
+
+.sf-adminBtn:hover{
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #C79F35 0%, var(--goldHover) 100%);
+}
+
+.sf-adminBtn:disabled{
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sf-adminHint{
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  margin-top: 6px;
+}

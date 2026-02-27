@@ -68,8 +68,14 @@ export default function Submit() {
   };
 
   return (
-    <div className="sf-page">
-      <h2 className="sf-submit-title">Submit Problem</h2>
+    <div className="sf-page sf-submitPage">
+      <header className="sf-submitHeader">
+        <div className="sf-submitBadge">REPORT ISSUE</div>
+        <h2 className="sf-submit-title">Submit Problem</h2>
+        <p className="sf-submitSub">
+          Provide a short title and accurate location. You can also add a photo link.
+        </p>
+      </header>
 
       <div className="sf-submit-card">
         {msg.text ? (
@@ -149,6 +155,10 @@ export default function Submit() {
           <button className="sf-submit-btn" type="submit" disabled={loading}>
             {loading ? "Submitting..." : "Submit"}
           </button>
+
+          <div className="sf-submitHint">
+            Tip: Title ছোট রাখুন, Location accurate দিন।
+          </div>
         </form>
       </div>
     </div>

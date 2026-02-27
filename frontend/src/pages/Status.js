@@ -1,10 +1,33 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProblems } from "../api";
+import { getProblems } from "../utils/api";
+import "./Status.css";
+
+function normStatus(s) {
+  const v = String(s || "pending").toLowerCase();
+  if (v === "resolved" || v === "solved") return "resolved";
+  if (v === "in_progress" || v === "in progress") return "in_progress";
+  if (v.includes("pending")) return "pending";
+  return v;
+}
+
+function pillClass(s) {
+  const st = normStatus(s);
+  if (st === "resolved") return "isResolved";
+  if (st === "in_progress") return "isProgress";
+  return "isPending";
+}
+
+function pillText(s) {
+  const st = normStatus(s);
+  if (st === "resolved") return "Resolved";
+  if (st === "in_progress") return "In Progress";
+  return "Pending";
+}
 
 export default function Status() {
-  const [items, setItems] = useState([]);
-  const [filter, setFilter] = useState("all"); // all | pending | solved
+  const [tab, setTab] = useState("all"); // all | pending | resolved
+  const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
@@ -12,114 +35,119 @@ export default function Status() {
     (async () => {
       try {
         setLoading(true);
-        const res = await getProblems();
-        setItems(res.data || []);
+        setErr("");
+        const data = await getProblems(); // returns array
+        setProblems(Array.isArray(data) ? data : []);
       } catch (e) {
-        setErr("Status load হচ্ছে না। Backend ঠিক আছে কিনা চেক করুন।");
+        console.error(e);
+        setErr("Status load হচ্ছে না। Backend চালু আছে কিনা চেক করুন।");
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  const showStatus = (s) => {
-    const v = (s || "Pending").toString().toLowerCase();
-    return v === "solved" ? "Solved" : "Pending";
-  };
+  const counts = useMemo(() => {
+    let all = problems.length;
+    let pending = 0;
+    let resolved = 0;
+    for (const p of problems) {
+      const st = normStatus(p.status);
+      if (st === "resolved") resolved++;
+      else pending++; // pending + in_progress
+    }
+    return { all, pending, resolved };
+  }, [problems]);
 
   const filtered = useMemo(() => {
-    if (filter === "all") return items;
-    if (filter === "pending") return items.filter((x) => showStatus(x.status) === "Pending");
-    return items.filter((x) => showStatus(x.status) === "Solved");
-  }, [items, filter]);
+    if (tab === "all") return problems;
+    if (tab === "resolved") return problems.filter((p) => normStatus(p.status) === "resolved");
+    // pending tab: pending + in_progress সব দেখাবে
+    return problems.filter((p) => normStatus(p.status) !== "resolved");
+  }, [problems, tab]);
 
   return (
-    <div className="sf-page">
-      <h2 style={{ marginTop: 0 }}>Status</h2>
-      
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
-        <button className="sf-btn sf-btn-primary" onClick={() => setFilter("all")}>
-          All
-        </button>
-        <button className="sf-btn" style={ghostBtn} onClick={() => setFilter("pending")}>
-          Pending
-        </button>
-        <button className="sf-btn" style={ghostBtn} onClick={() => setFilter("solved")}>
-          Solved
-        </button>
+    <div className="sf-statusPage">
+      <div className="sf-statusHero">
+        <h1 className="sf-statusTitle">Status</h1>
+        <p className="sf-statusSub">
+          Track submitted reports by status.
+        </p>
+
+        <div className="sf-statusTabs">
+          <button
+            className={`sf-tab ${tab === "all" ? "active" : ""}`}
+            onClick={() => setTab("all")}
+            type="button"
+          >
+            All <span className="sf-tabCount">{counts.all}</span>
+          </button>
+
+          <button
+            className={`sf-tab ${tab === "pending" ? "active" : ""}`}
+            onClick={() => setTab("pending")}
+            type="button"
+          >
+            Pending <span className="sf-tabCount">{counts.pending}</span>
+          </button>
+
+          <button
+            className={`sf-tab ${tab === "resolved" ? "active" : ""}`}
+            onClick={() => setTab("resolved")}
+            type="button"
+          >
+            Solved <span className="sf-tabCount">{counts.resolved}</span>
+          </button>
+        </div>
       </div>
 
-      {loading && <p style={{ marginTop: 16 }}>Loading...</p>}
-      {err && <p style={{ marginTop: 16 }}>{err}</p>}
-
-      {!loading && !err && filtered.length === 0 && (
-        <p style={{ marginTop: 16 }}>No reports found.</p>
+      {loading && (
+        <div className="sf-statusGrid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className="sf-statusCard sf-skel" key={i}>
+              <div className="sf-skelLine w60" />
+              <div className="sf-skelLine w40" />
+              <div className="sf-skelLine w80" />
+            </div>
+          ))}
+        </div>
       )}
 
-      <div style={gridStyle}>
-        {filtered.map((p) => {
-          const st = showStatus(p.status);
-          return (
-            <Link key={p._id} to={`/problems/${p._id}`} style={cardStyle}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-                <h3 style={{ margin: 0 }}>{p.title}</h3>
-                <span style={pill(st)}>{st}</span>
+      {!loading && err && <div className="sf-statusError">❌ {err}</div>}
+
+      {!loading && !err && filtered.length === 0 && (
+        <div className="sf-statusEmpty">
+          <div className="sf-emptyIcon" aria-hidden="true">✓</div>
+          <h3>No reports found</h3>
+          <p>এই status এ এখন কোনো report নেই।</p>
+          <Link className="sf-emptyBtn" to="/submit">
+            Submit a problem
+          </Link>
+        </div>
+      )}
+
+      {!loading && !err && filtered.length > 0 && (
+        <div className="sf-statusGrid">
+          {filtered.map((p) => (
+            <Link key={p._id} to={`/problems/${p._id}`} className="sf-statusCard">
+              <div className="sf-cardTop">
+                <h3 className="sf-cardTitle">{p.title}</h3>
+                <span className={`sf-pill ${pillClass(p.status)}`}>{pillText(p.status)}</span>
               </div>
-              <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,.70)" }}>
-                {p.location}
-              </p>
+
+              <div className="sf-cardLoc">
+                <span className="sf-locDot" aria-hidden="true" />
+                <span className="sf-locText">{p.location}</span>
+              </div>
+
+              <div className="sf-cardMeta">
+                <span className="sf-metaLabel">Category</span>
+                <span className="sf-metaValue">{p.category || "—"}</span>
+              </div>
             </Link>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-
-const gridStyle = {
-  marginTop: 16,
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: 14,
-};
-
-const cardStyle = {
-  textDecoration: "none",
-  color: "rgba(255,255,255,.92)",
-  border: "1px solid rgba(255,255,255,.10)",
-  borderRadius: 18,
-  padding: 16,
-  background: "rgba(255,255,255,.06)",
-};
-
-const ghostBtn = {
-  color: "rgba(255,255,255,.92)",
-  border: "1px solid rgba(255,255,255,.10)",
-  background: "rgba(255,255,255,.06)",
-};
-
-const pill = (status) => {
-  const common = {
-    fontSize: 12,
-    fontWeight: 900,
-    padding: "6px 10px",
-    borderRadius: 999,
-    border: "1px solid rgba(255,255,255,.12)",
-    height: "fit-content",
-  };
-
-  if (status === "Solved") {
-    return {
-      ...common,
-      color: "#34d399",
-      borderColor: "rgba(52,211,153,.30)",
-      background: "rgba(52,211,153,.12)",
-    };
-  }
-  return {
-    ...common,
-    color: "#fbbf24",
-    borderColor: "rgba(251,191,36,.30)",
-    background: "rgba(251,191,36,.12)",
-  };
-};
