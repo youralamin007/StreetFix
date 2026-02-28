@@ -1,9 +1,9 @@
 :root{
-  --accent: #C19B46;     /* highlight */
-  --gold: #D4AF37;       /* button */
-  --goldHover: #B8922E;  /* button hover */
-  --bg: #E5E3DE;         /* main bg */
-  --surface: #F8F7F4;    /* cards */
+  --accent: #C19B46;
+  --gold: #D4AF37;
+  --goldHover: #B8922E;
+  --bg: #E5E3DE;
+  --surface: #F8F7F4;
   --text: #1C1C1C;
   --muted: #6B6B6B;
 
@@ -67,7 +67,6 @@
   justify-content: flex-end;
 }
 
-/* Round icon buttons */
 .sf-icon-actions{
   display:flex;
   align-items:center;
@@ -139,28 +138,6 @@
   border-radius: 1px;
 }
 
-/* Buttons (common) */
-.sf-btn,
-.sf-submit-btn,
-.sf-cta--primary{
-  border: 1px solid rgba(0,0,0,.10);
-  cursor:pointer;
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-weight: 950;
-  background: linear-gradient(180deg, #E2C25A 0%, var(--gold) 55%, #CDA634 100%);
-  color: var(--text);
-  transition: .15s ease;
-  box-shadow: 0 14px 28px rgba(193,155,70,.18);
-}
-
-.sf-btn:hover,
-.sf-submit-btn:hover,
-.sf-cta--primary:hover{
-  background: linear-gradient(180deg, #C79F35 0%, var(--goldHover) 100%);
-  transform: translateY(-1px);
-}
-
 /* ---------- Footer ---------- */
 .sf-footer{
   margin-top: auto;
@@ -169,7 +146,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* ✅ 1 column footer */
 .sf-footer-inner{
   max-width: 1200px;
   margin: 0 auto;
@@ -205,50 +181,26 @@
   color: var(--muted);
 }
 
-.sf-footer-heading{
-  font-weight: 950;
-  font-size: 16px;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
-/* social link */
-.sf-social{
-  display:inline-flex;
-  align-items:center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  text-decoration:none;
-  font-weight: 950;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  width: fit-content;
-}
-
-.sf-social:hover{
-  background: rgba(212,175,55,.14);
-  border-color: rgba(193,155,70,.28);
-}
-
-.sf-social-ico{
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background: rgba(212,175,55,.22);
-  color: var(--text);
-}
-
-.sf-social-ico svg{
-  width: 20px;
-  height: 20px;
-}
-
-/* Responsive */
+/* Responsive navbar */
 @media (max-width: 640px){
-  .sf-nav{ padding: 12px 14px; }
+  .sf-app{
+    padding: 18px 14px 34px;
+  }
+
+  .sf-nav{
+    padding: 10px 12px;
+  }
+
+  .sf-brand{
+    font-size: 16px;
+  }
+
+  .sf-icon-btn{
+    width: 40px;
+    height: 40px;
+  }
+
+  .sf-menu-panel{
+    min-width: 220px;
+  }
 }

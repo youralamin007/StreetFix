@@ -1,10 +1,12 @@
-/* Full-width landing (break out of centered container) */
+/* =========================
+   HERO (same style)
+   ========================= */
+
 .sf-heroSplit{
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
 
-  /* cancel .sf-app padding (if you have it) */
   margin-top: -22px;
   margin-bottom: -40px;
 
@@ -16,25 +18,19 @@
     linear-gradient(180deg, #F2F4F6 0%, #EEF0F2 100%);
 }
 
-/* Inner container */
 .sf-heroInner{
   position: relative;
   min-height: inherit;
 
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-
-  /* ✅ left content up (not vertically centered) */
   align-items: start;
 
   max-width: 1200px;
   margin: 0 auto;
-
-  /* ✅ little top padding to look clean */
   padding: 20px 10px 0;
 }
 
-/* Right green panel with diagonal edge */
 .sf-heroSplit::before{
   content:"";
   position:absolute;
@@ -46,7 +42,6 @@
   clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
 }
 
-/* subtle green glow */
 .sf-heroSplit::after{
   content:"";
   position:absolute;
@@ -59,12 +54,9 @@
   pointer-events: none;
 }
 
-/* LEFT */
 .sf-heroLeft{
   position: relative;
   z-index: 2;
-
-  /* ✅ moved upward */
   padding: 34px 18px 56px 22px;
 }
 
@@ -104,6 +96,9 @@
   background: #CFE46A;
   box-shadow: 0 18px 40px rgba(0,0,0,.12);
   transition: .16s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sf-heroBtnPrimary:hover{
@@ -121,6 +116,9 @@
   background: rgba(255,255,255,.55);
   border: 1px solid rgba(28,28,28,.14);
   transition: .16s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sf-heroBtnGhost:hover{
@@ -138,12 +136,9 @@
   align-items: center;
   justify-items: center;
   padding: 26px 18px;
-
-  /* ✅ keep right panel centered like before */
   align-self: center;
 }
 
-/* Panel that holds 4 tiles */
 .sf-heroPanel{
   width: min(680px, 100%);
   padding: 14px;
@@ -158,7 +153,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* 2x2 grid */
 .sf-heroGrid{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -170,7 +164,6 @@
   border: 1px solid rgba(0,0,0,.10);
   border-radius: 22px;
   overflow: hidden;
-
   box-shadow: 0 18px 55px rgba(0,0,0,.14);
   transition: transform .14s ease, box-shadow .14s ease;
 }
@@ -202,7 +195,273 @@
   letter-spacing: .4px;
 }
 
-/* Responsive */
+/* =========================
+   BENEFITS (Why StreetFix)
+   ========================= */
+
+.sf-benefits{
+  padding: 70px 0 78px;
+  background:
+    radial-gradient(900px 560px at 18% 0%, rgba(134,182,77,.16), transparent 60%),
+    radial-gradient(900px 560px at 82% 20%, rgba(0,0,0,.05), transparent 60%),
+    linear-gradient(180deg, #EEF0F2 0%, #E9ECEF 100%);
+}
+
+.sf-benefitsInner{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+.sf-benefitsHead{
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.sf-benefitsTitle{
+  margin: 0;
+  font-size: clamp(28px, 3.1vw, 40px);
+  font-weight: 1000;
+  color: #121416;
+  letter-spacing: -0.6px;
+}
+
+.sf-benefitsSub{
+  margin: 10px auto 0;
+  max-width: 740px;
+  color: rgba(18,20,22,.70);
+  font-weight: 800;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.sf-benefitsGrid{
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sf-benefitCard{
+  position: relative;
+  border-radius: 26px;
+  padding: 20px 18px;
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(18,20,22,.10);
+  box-shadow:
+    0 22px 65px rgba(0,0,0,.10),
+    0 8px 18px rgba(0,0,0,.06);
+  backdrop-filter: blur(10px);
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  overflow: hidden;
+}
+
+.sf-benefitCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(700px 280px at 20% 0%, rgba(134,182,77,.14), transparent 55%);
+  opacity: .9;
+  pointer-events:none;
+}
+
+.sf-benefitCard:hover{
+  transform: translateY(-4px);
+  border-color: rgba(134,182,77,.32);
+  box-shadow:
+    0 34px 90px rgba(0,0,0,.14),
+    0 14px 26px rgba(0,0,0,.10);
+}
+
+.sf-benefitIcon{
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: linear-gradient(180deg, rgba(207,228,106,.92), rgba(134,182,77,.40));
+  border: 1px solid rgba(134,182,77,.30);
+  box-shadow: 0 14px 30px rgba(134,182,77,.18);
+}
+
+.sf-benefitName{
+  position: relative;
+  margin: 14px 0 8px;
+  font-size: 17px;
+  font-weight: 1000;
+  color: #121416;
+  letter-spacing: -0.2px;
+}
+
+.sf-benefitText{
+  position: relative;
+  margin: 0;
+  color: rgba(18,20,22,.72);
+  font-weight: 800;
+  line-height: 1.7;
+  font-size: 13.8px;
+}
+
+/* =========================
+   HOW IT WORKS (PRO)
+   ========================= */
+
+.sf-how{
+  padding: 70px 0 78px;
+  background: linear-gradient(180deg, #E9ECEF 0%, #E5E8EB 100%);
+}
+
+.sf-howInner{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+.sf-howHead{
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.sf-howTitle{
+  margin: 0;
+  font-size: clamp(28px, 3.1vw, 40px);
+  font-weight: 1000;
+  color: #121416;
+  letter-spacing: -0.6px;
+}
+
+.sf-howSub{
+  margin: 10px auto 0;
+  max-width: 740px;
+  color: rgba(18,20,22,.70);
+  font-weight: 800;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.sf-howGrid{
+  position: relative;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sf-howGrid::before{
+  content:"";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 54px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(134,182,77,0), rgba(134,182,77,.45), rgba(134,182,77,0));
+  z-index: 0;
+}
+
+.sf-howCard{
+  position: relative;
+  z-index: 1;
+  border-radius: 26px;
+  padding: 20px 18px 18px;
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(18,20,22,.10);
+  box-shadow: 0 22px 65px rgba(0,0,0,.10);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+
+.sf-howCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(700px 280px at 20% 0%, rgba(134,182,77,.14), transparent 55%);
+  opacity: .9;
+  pointer-events:none;
+}
+
+.sf-howCard:hover{
+  transform: translateY(-4px);
+  border-color: rgba(134,182,77,.32);
+  box-shadow: 0 34px 90px rgba(0,0,0,.14);
+}
+
+.sf-howTop{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sf-howNum{
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 1000;
+  color: #121416;
+  background: linear-gradient(180deg, rgba(207,228,106,.92), rgba(134,182,77,.40));
+  border: 1px solid rgba(134,182,77,.30);
+  box-shadow: 0 14px 30px rgba(134,182,77,.18);
+}
+
+.sf-howIcon{
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(18,20,22,.10);
+  box-shadow: 0 14px 30px rgba(0,0,0,.08);
+}
+
+.sf-howName{
+  position: relative;
+  margin: 14px 0 8px;
+  font-size: 17px;
+  font-weight: 1000;
+  color: #121416;
+  letter-spacing: -0.2px;
+}
+
+.sf-howText{
+  position: relative;
+  margin: 0 0 14px;
+  color: rgba(18,20,22,.72);
+  font-weight: 800;
+  line-height: 1.7;
+  font-size: 13.8px;
+}
+
+.sf-howPill{
+  position: relative;
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 950;
+  font-size: 12px;
+  color: rgba(18,20,22,.82);
+  background: rgba(134,182,77,.14);
+  border: 1px solid rgba(134,182,77,.22);
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 1024px){
+  .sf-heroTitle{ font-size: clamp(32px, 6vw, 56px); }
+  .sf-heroDesc{ max-width: 100%; }
+  .sf-heroPanel{ width: min(640px, 100%); }
+}
+
 @media (max-width: 980px){
   .sf-heroInner{
     grid-template-columns: 1fr;
@@ -215,25 +474,85 @@
   }
 
   .sf-heroLeft{
-    padding: 34px 18px 14px; /* still upper on mobile */
+    padding: 30px 18px 12px;
   }
 
   .sf-heroRight{
-    padding: 14px 18px 38px;
+    padding: 14px 18px 34px;
     align-self: auto;
   }
 
   .sf-heroSplit{
     min-height: auto;
   }
-}
 
-@media (max-width: 520px){
-  .sf-heroGrid{
+  .sf-benefits{
+    padding: 56px 0 62px;
+  }
+  .sf-benefitsGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sf-how{
+    padding: 56px 0 62px;
+  }
+  .sf-howGrid{
     grid-template-columns: 1fr;
   }
+  .sf-howGrid::before{
+    display: none;
+  }
+}
+
+@media (max-width: 640px){
+  .sf-heroSplit{
+    margin-top: -14px;
+    margin-bottom: -22px;
+  }
+
+  .sf-heroLeft{
+    padding: 24px 14px 10px;
+  }
+
+  .sf-heroActions{
+    gap: 10px;
+  }
+
+  .sf-heroBtnPrimary,
+  .sf-heroBtnGhost{
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  .sf-heroRight{
+    padding: 12px 14px 28px;
+  }
+
   .sf-heroPanel{
     padding: 12px;
     border-radius: 26px;
   }
+
+  .sf-heroGrid{
+    grid-template-columns: 1fr;
+  }
+
+  .sf-ill{ max-height: 170px; }
+
+  .sf-benefits{
+    padding: 44px 0 56px;
+  }
+  .sf-benefitsGrid{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .sf-benefitCard{
+    padding: 18px 16px;
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 420px){
+  .sf-heroTitle{ font-size: 34px; }
+  .sf-heroDesc{ font-size: 14px; }
 }
