@@ -184,7 +184,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW IT WORKS (PRO: icons + connector) */}
+      {/* HOW IT WORKS (clickable pills) */}
       <section className="sf-how">
         <div className="sf-howInner">
           <div className="sf-howHead">
@@ -202,7 +202,9 @@ export default function Home() {
               <p className="sf-howText">
                 Add a short title, category and accurate location. Optionally include a photo link.
               </p>
-              <div className="sf-howPill">Submit</div>
+
+              {/* ✅ click => submit page */}
+              <Link className="sf-howPill" to="/submit">Submit</Link>
             </div>
 
             <div className="sf-howCard">
@@ -214,7 +216,9 @@ export default function Home() {
               <p className="sf-howText">
                 Reports move through statuses like Pending and In Progress as they are handled.
               </p>
-              <div className="sf-howPill">Track</div>
+
+              {/* ✅ click => status page */}
+              <Link className="sf-howPill" to="/status">Track</Link>
             </div>
 
             <div className="sf-howCard">
@@ -226,7 +230,9 @@ export default function Home() {
               <p className="sf-howText">
                 Once fixed, the report is marked as Resolved so everyone can see the outcome.
               </p>
-              <div className="sf-howPill">Resolved</div>
+
+              {/* ✅ click => solved page */}
+              <Link className="sf-howPill" to="/solved">Resolved</Link>
             </div>
           </div>
         </div>

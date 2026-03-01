@@ -1,5 +1,5 @@
 /* =========================
-   HERO (same style)
+   HERO (FULL SCREEN)
    ========================= */
 
 .sf-heroSplit{
@@ -7,10 +7,8 @@
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
 
-  margin-top: -22px;
-  margin-bottom: -40px;
-
-  min-height: calc(100vh - 78px);
+  min-height: 100vh;
+  padding-top: 78px;
   overflow: hidden;
 
   background:
@@ -20,7 +18,7 @@
 
 .sf-heroInner{
   position: relative;
-  min-height: inherit;
+  min-height: calc(100vh - 78px);
 
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -31,6 +29,7 @@
   padding: 20px 10px 0;
 }
 
+/* Right green diagonal panel */
 .sf-heroSplit::before{
   content:"";
   position:absolute;
@@ -42,6 +41,7 @@
   clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
 }
 
+/* subtle glow */
 .sf-heroSplit::after{
   content:"";
   position:absolute;
@@ -54,6 +54,7 @@
   pointer-events: none;
 }
 
+/* LEFT */
 .sf-heroLeft{
   position: relative;
   z-index: 2;
@@ -131,14 +132,17 @@
 .sf-heroRight{
   position: relative;
   z-index: 2;
+
   height: 100%;
   display: grid;
   align-items: center;
   justify-items: center;
+
   padding: 26px 18px;
   align-self: center;
 }
 
+/* Panel that holds tiles */
 .sf-heroPanel{
   width: min(680px, 100%);
   padding: 14px;
@@ -268,9 +272,7 @@
 .sf-benefitCard:hover{
   transform: translateY(-4px);
   border-color: rgba(134,182,77,.32);
-  box-shadow:
-    0 34px 90px rgba(0,0,0,.14),
-    0 14px 26px rgba(0,0,0,.10);
+  box-shadow: 0 34px 90px rgba(0,0,0,.14);
 }
 
 .sf-benefitIcon{
@@ -281,6 +283,7 @@
   display: grid;
   place-items: center;
   font-size: 22px;
+
   background: linear-gradient(180deg, rgba(207,228,106,.92), rgba(134,182,77,.40));
   border: 1px solid rgba(134,182,77,.30);
   box-shadow: 0 14px 30px rgba(134,182,77,.18);
@@ -405,6 +408,7 @@
   font-size: 18px;
   font-weight: 1000;
   color: #121416;
+
   background: linear-gradient(180deg, rgba(207,228,106,.92), rgba(134,182,77,.40));
   border: 1px solid rgba(134,182,77,.30);
   box-shadow: 0 14px 30px rgba(134,182,77,.18);
@@ -417,6 +421,7 @@
   display: grid;
   place-items: center;
   font-size: 22px;
+
   background: rgba(255,255,255,.70);
   border: 1px solid rgba(18,20,22,.10);
   box-shadow: 0 14px 30px rgba(0,0,0,.08);
@@ -440,6 +445,7 @@
   font-size: 13.8px;
 }
 
+/* ✅ This is now a Link pill (no underline) */
 .sf-howPill{
   position: relative;
   display: inline-flex;
@@ -450,41 +456,51 @@
   color: rgba(18,20,22,.82);
   background: rgba(134,182,77,.14);
   border: 1px solid rgba(134,182,77,.22);
+
+  text-decoration: none;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.sf-howPill:hover{
+  background: rgba(134,182,77,.20);
+  border-color: rgba(134,182,77,.32);
+  transform: translateY(-1px);
+}
+
+/* enforce underline removal */
+.sf-howPill,
+.sf-howPill:visited,
+.sf-howPill:hover,
+.sf-howPill:active{
+  text-decoration: none !important;
 }
 
 /* =========================
    Responsive
    ========================= */
 
-@media (max-width: 1024px){
-  .sf-heroTitle{ font-size: clamp(32px, 6vw, 56px); }
-  .sf-heroDesc{ max-width: 100%; }
-  .sf-heroPanel{ width: min(640px, 100%); }
-}
-
 @media (max-width: 980px){
   .sf-heroInner{
     grid-template-columns: 1fr;
-    padding: 0 10px;
+    min-height: auto;
   }
-
+  .sf-heroSplit{
+    padding-top: 78px;
+  }
   .sf-heroSplit::before{
     width: 100%;
     clip-path: none;
   }
-
   .sf-heroLeft{
     padding: 30px 18px 12px;
   }
-
   .sf-heroRight{
     padding: 14px 18px 34px;
     align-self: auto;
   }
 
-  .sf-heroSplit{
-    min-height: auto;
-  }
+  .sf-heroPanel{ width: min(640px, 100%); }
 
   .sf-benefits{
     padding: 56px 0 62px;
@@ -506,8 +522,7 @@
 
 @media (max-width: 640px){
   .sf-heroSplit{
-    margin-top: -14px;
-    margin-bottom: -22px;
+    padding-top: 70px; /* if nav smaller on mobile */
   }
 
   .sf-heroLeft{
