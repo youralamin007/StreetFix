@@ -1,48 +1,93 @@
-/* Submit page - premium light theme readable */
-
-.sf-page{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 18px;
+.sf-submitPage{
+  position: relative;
+  padding: 22px 14px 60px;
 }
 
-.sf-submit-title{
-  margin: 0 0 14px;
-  font-size: 42px;
+/* soft background */
+.sf-submitPage::before{
+  content:"";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 520px at 20% 10%, rgba(212,175,55,.20), transparent 60%),
+    radial-gradient(900px 520px at 85% 10%, rgba(193,155,70,.12), transparent 60%),
+    linear-gradient(180deg, rgba(248,247,244,.35), rgba(248,247,244,0));
+  z-index: 0;
+}
+
+.sf-submitPage > *{ position: relative; z-index: 1; }
+
+/* Header */
+.sf-submitHeader{
+  max-width: 860px;
+  margin: 0 auto 14px;
+  text-align: center;
+}
+
+.sf-submitBadge{
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 950;
-  letter-spacing: .2px;
+  letter-spacing: 1px;
+  background: rgba(212,175,55,.18);
+  border: 1px solid rgba(212,175,55,.28);
   color: #1C1C1C;
 }
 
+.sf-submit-title{
+  margin: 14px 0 6px;
+  font-size: clamp(34px, 4.8vw, 60px);
+  line-height: 1.05;
+  font-weight: 950;
+  color: #1C1C1C;
+  letter-spacing: -0.6px;
+}
+
+.sf-submitSub{
+  margin: 0 auto;
+  max-width: 640px;
+  color: #6B6B6B;
+  font-weight: 750;
+  line-height: 1.7;
+}
+
+/* Card */
 .sf-submit-card{
-  background: #F8F7F4;
+  width: min(720px, 100%);
+  margin: 16px auto 0;
+  background: rgba(248,247,244,.92);
   border: 1px solid rgba(28,28,28,.12);
-  border-radius: 22px;
-  padding: 22px;
-  box-shadow: 0 22px 60px rgba(0,0,0,.10);
+  border-radius: 26px;
+  padding: 18px;
+  box-shadow: 0 26px 80px rgba(0,0,0,.12);
+  backdrop-filter: blur(10px);
 }
 
 /* Alerts */
 .sf-alert{
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 12px 14px;
-  font-weight: 800;
-  margin-bottom: 14px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  border: 1px solid rgba(28,28,28,.10);
 }
 
 .sf-alert.ok{
   background: rgba(34,197,94,.14);
-  border: 1px solid rgba(34,197,94,.28);
+  border-color: rgba(34,197,94,.28);
   color: #14532d;
 }
 
 .sf-alert.err{
   background: rgba(239,68,68,.12);
-  border: 1px solid rgba(239,68,68,.28);
+  border-color: rgba(239,68,68,.28);
   color: #7f1d1d;
 }
 
-/* Form layout */
+/* Form */
 .sf-submit-form{
   display: grid;
   gap: 14px;
@@ -54,65 +99,71 @@
 }
 
 .sf-label{
-  font-size: 15px;
-  font-weight: 900;
+  font-size: 14px;
+  font-weight: 950;
   color: #1C1C1C;
 }
 
-/* Inputs */
 .sf-input,
 .sf-select,
 .sf-textarea{
   width: 100%;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1px solid rgba(28,28,28,.14);
-  background: #FFFFFF;
+  background: rgba(255,255,255,.90);
   color: #1C1C1C;
   padding: 14px 14px;
   outline: none;
   font-size: 15px;
+  font-weight: 800;
 }
 
 .sf-textarea{
-  min-height: 110px;
+  min-height: 120px;
   resize: vertical;
 }
 
 .sf-input::placeholder,
 .sf-textarea::placeholder{
   color: rgba(28,28,28,.45);
-  font-weight: 700;
+  font-weight: 750;
 }
 
-/* Focus ring (gold) */
 .sf-input:focus,
 .sf-select:focus,
 .sf-textarea:focus{
-  border-color: rgba(193,155,70,.55);
-  box-shadow: 0 0 0 4px rgba(212,175,55,.22);
+  border-color: rgba(212,175,55,.55);
+  box-shadow: 0 0 0 4px rgba(212,175,55,.18);
 }
 
 /* Button */
 .sf-submit-btn{
   border: 1px solid rgba(0,0,0,.10);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 14px 16px;
   cursor: pointer;
   font-weight: 950;
   font-size: 15px;
   color: #1C1C1C;
-  background: linear-gradient(180deg, #E2C25A 0%, #D4AF37 55%, #CDA634 100%);
-  box-shadow: 0 16px 34px rgba(193,155,70,.22);
+  background: linear-gradient(180deg, #E2C25A 0%, #D4AF37 65%, #CDA634 100%);
+  box-shadow: 0 18px 35px rgba(193,155,70,.18);
   transition: .15s ease;
 }
 
 .sf-submit-btn:hover{
-  background: linear-gradient(180deg, #C79F35 0%, #B8922E 100%);
   transform: translateY(-1px);
+  background: linear-gradient(180deg, #C79F35 0%, #B8922E 100%);
 }
 
 .sf-submit-btn:disabled{
   opacity: .65;
   cursor: not-allowed;
   transform: none;
+}
+
+@media (max-width: 520px){
+  .sf-submit-card{
+    border-radius: 20px;
+    padding: 14px;
+  }
 }

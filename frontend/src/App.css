@@ -11,21 +11,25 @@
   --shadow: 0 18px 50px rgba(0,0,0,.10);
 }
 
-/* Sticky footer layout */
+/* Make app full width */
 #root{
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* ✅ IMPORTANT: remove max-width limitation */
 .sf-app{
   flex: 1;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 22px 18px 40px;
+  width: 100%;
+  max-width: none;     /* ✅ full width */
+  margin: 0;
+  padding: 0;          /* ✅ no padding বাধা */
 }
 
+/* optional wrapper for normal pages that should be centered */
 .sf-page{
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 18px;
@@ -183,24 +187,9 @@
 
 /* Responsive navbar */
 @media (max-width: 640px){
-  .sf-app{
-    padding: 18px 14px 34px;
-  }
-
-  .sf-nav{
-    padding: 10px 12px;
-  }
-
-  .sf-brand{
-    font-size: 16px;
-  }
-
-  .sf-icon-btn{
-    width: 40px;
-    height: 40px;
-  }
-
-  .sf-menu-panel{
-    min-width: 220px;
-  }
+  .sf-nav{ padding: 10px 12px; }
+  .sf-brand{ font-size: 16px; }
+  .sf-icon-btn{ width: 40px; height: 40px; }
+  .sf-menu-panel{ min-width: 220px; }
+  .sf-page{ padding: 14px; }
 }

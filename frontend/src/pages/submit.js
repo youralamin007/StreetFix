@@ -31,7 +31,7 @@ export default function Submit() {
     setMsg({ type: "", text: "" });
 
     if (!form.title.trim() || !form.location.trim()) {
-      setMsg({ type: "error", text: "Title এবং Location অবশ্যই দিতে হবে।" });
+      setMsg({ type: "error", text: "Title and Location are required." });
       return;
     }
 
@@ -59,7 +59,7 @@ export default function Submit() {
       const backendMsg =
         err?.response?.data?.message ||
         err?.message ||
-        "Submit failed. Backend/API চেক করুন।";
+        "Submit failed. Please check the backend/API.";
       setMsg({ type: "error", text: backendMsg });
       console.error(err);
     } finally {
@@ -85,7 +85,6 @@ export default function Submit() {
         ) : null}
 
         <form className="sf-submit-form" onSubmit={onSubmit}>
-          {/* Title */}
           <div className="sf-field">
             <label className="sf-label">Title *</label>
             <input
@@ -98,7 +97,6 @@ export default function Submit() {
             />
           </div>
 
-          {/* Category */}
           <div className="sf-field">
             <label className="sf-label">Category</label>
             <select
@@ -115,7 +113,6 @@ export default function Submit() {
             </select>
           </div>
 
-          {/* Location */}
           <div className="sf-field">
             <label className="sf-label">Location *</label>
             <input
@@ -128,7 +125,6 @@ export default function Submit() {
             />
           </div>
 
-          {/* Photo URL */}
           <div className="sf-field">
             <label className="sf-label">Photo URL (optional)</label>
             <input
@@ -140,7 +136,6 @@ export default function Submit() {
             />
           </div>
 
-          {/* Description */}
           <div className="sf-field">
             <label className="sf-label">Description (optional)</label>
             <textarea
@@ -155,10 +150,6 @@ export default function Submit() {
           <button className="sf-submit-btn" type="submit" disabled={loading}>
             {loading ? "Submitting..." : "Submit"}
           </button>
-
-          <div className="sf-submitHint">
-            Tip: Title ছোট রাখুন, Location accurate দিন।
-          </div>
         </form>
       </div>
     </div>

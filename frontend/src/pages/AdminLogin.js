@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../utils/api";
+import "./AdminLogin.css";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+
+  const [email, setEmail] = useState("admin@streetfix.com");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -12,24 +14,31 @@ export default function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("Email and password are required.");
+      return;
+    }
+
     setLoading(true);
-
     try {
-      const data = await adminLogin({ email, password });
+      // ✅ correct usage: adminLogin(email, password)
+      const data = await adminLogin(email.trim(), password);
 
-      // টোকেন সেভ করা
-      if (data?.token) {
-        localStorage.setItem("token", data.token);
-      } else {
-        // যদি আপনার ব্যাকএন্ড টোকেন না দিয়ে শুধু সাকসেস মেসেজ দেয়
-        localStorage.setItem("token", "logged_in");
+      if (!data?.token) {
+        setError("Login failed: token not received from server.");
+        return;
       }
 
-      // ✅ লগিন সফল হলে ড্যাশবোর্ডে পাঠানো
+      localStorage.setItem("token", data.token);
+
       navigate("/admin/dashboard");
-      window.location.reload(); // নাবার আপডেট করার জন্য
+      window.location.reload(); // navbar/admin state refresh
     } catch (err) {
-      setError("Login failed. Check email and password.");
+      const msg =
+        err?.response?.data?.message ||
+        "Login failed. Check email and password.";
+      setError(msg);
       console.error(err);
     } finally {
       setLoading(false);
@@ -37,22 +46,17 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="sf-page">
-      <div style={{ maxWidth: 420, margin: "40px auto" }}>
-        <h2>Admin Login</h2>
+    <div className="sf-adminLoginPage">
+      <div className="sf-adminLoginCard">
+        <h2 className="sf-adminLoginTitle">Admin Login</h2>
 
-        {error ? (
-          <div style={{ padding: 12, background: "rgba(239,68,68,.15)", color: "tomato", borderRadius: 10, marginBottom: 15, fontWeight: 800 }}>
-            {error}
-          </div>
-        ) : null}
+        {error ? <div className="sf-adminError">{error}</div> : null}
 
-        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 15 }}>
-          <div>
-            <label style={{ display: "block", marginBottom: 5, fontWeight: 700 }}>Email</label>
+        <form onSubmit={handleSubmit} className="sf-adminForm">
+          <div className="sf-adminField">
+            <label className="sf-adminLabel">Email</label>
             <input
-              className="sf-link"
-              style={{ width: "100%", padding: 12 }}
+              className="sf-adminInput"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -61,20 +65,19 @@ export default function AdminLogin() {
             />
           </div>
 
-          <div>
-            <label style={{ display: "block", marginBottom: 5, fontWeight: 700 }}>Password</label>
+          <div className="sf-adminField">
+            <label className="sf-adminLabel">Password</label>
             <input
-              className="sf-link"
-              style={{ width: "100%", padding: 12 }}
+              className="sf-adminInput"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Enter password"
               required
             />
           </div>
 
-          <button className="sf-btn sf-btn-primary" type="submit" disabled={loading}>
+          <button className="sf-adminBtn" type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login to Admin Panel"}
           </button>
         </form>
